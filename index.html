@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN Emoji Widget - Bubbly Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --line-color: #4A90E2; /* Friendlier blue */
+            --btn-hover: #f0f7ff;
+            --btn-active: #e1efff;
+            /* Bubbly Gradient for the title */
+            --title-gradient: linear-gradient(45deg, #ff6b6b, #48dbfb, #feca57);
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif; /* Applied Fredoka globally */
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .lms-widget {
+            background: var(--bg-color);
+            padding: 30px;
+            border: 1px solid #ddd;
+            display: grid;
+            grid-template-columns: 1fr 400px 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            width: 750px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 20px; /* Rounded widget corners */
+        }
+
+        .instruction {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            /* Gradient text effect */
+            background: var(--title-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.05));
+        }
+
+        .btn-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .left-side { align-items: flex-start; }
+        .right-side { align-items: flex-end; }
+
+        .cn-btn {
+            width: 110px;
+            background: white;
+            border: 2px solid var(--line-color);
+            border-radius: 25px; /* Fully rounded "bubbly" buttons */
+            padding: 12px 0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--line-color);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .cn-btn:hover { 
+            background: var(--btn-hover); 
+            transform: translateY(-1px);
+        }
+        
+        .cn-btn.active { 
+            background: var(--line-color); 
+            color: white;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .display-area {
+            grid-column: 2;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #fafafa;
+            border-radius: 15px;
+        }
+
+        #emoji-viewer {
+            font-size: 100px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        #description {
+            font-size: 16px;
+            color: #222;
+            padding: 0 20px;
+            line-height: 1.4;
+        }
+
+        /* --- GLISTEN (SENSORY) --- */
+        @keyframes glisten {
+            0% { filter: drop-shadow(0 0 0px rgba(255,255,255,0)) brightness(1); }
+            50% { filter: drop-shadow(0 0 25px rgba(255, 223, 0, 0.9)) brightness(1.8); }
+            100% { filter: drop-shadow(0 0 0px rgba(255,255,255,0)) brightness(1); }
+        }
+        .glisten { animation: glisten 0.9s ease-in-out; }
+
+        /* --- JIGGLE (MOTOR) --- */
+        @keyframes jiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            75% { transform: rotate(8deg); }
+        }
+        .jiggle { animation: jiggle 0.6s ease-in-out; }
+
+        .both { animation: glisten 0.9s ease-in-out, jiggle 0.6s ease-in-out; }
+
+        .legend {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            font-size: 13px;
+            color: #666;
+            margin-top: 15px;
+            font-weight: 400;
+        }
+        
+        #reset-btn { 
+            background: none; 
+            border: none; 
+            text-decoration: underline; 
+            color: #999; 
+            cursor: pointer; 
+            font-size: 11px; 
+            margin-top: 5px; 
+            font-family: 'Fredoka', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lms-widget">
+    <div class="instruction">Cranial Nerve Emoji Functions</div>
+
+    <div class="btn-column left-side">
+        <button class="cn-btn" onclick="testCN(1, this)">CN I</button>
+        <button class="cn-btn" onclick="testCN(2, this)">CN II</button>
+        <button class="cn-btn" onclick="testCN(3, this)">CN III</button>
+        <button class="cn-btn" onclick="testCN(4, this)">CN IV</button>
+        <button class="cn-btn" onclick="testCN(5, this)">CN V</button>
+        <button class="cn-btn" onclick="testCN(6, this)">CN VI</button>
+        <button id="reset-btn" onclick="resetAll()">Reset View</button>
+    </div>
+
+    <div class="display-area">
+        <div id="emoji-viewer">🧠</div>
+        <div id="description">Select a nerve to begin.</div>
+    </div>
+
+    <div class="btn-column right-side">
+        <button class="cn-btn" onclick="testCN(7, this)">CN VII</button>
+        <button class="cn-btn" onclick="testCN(8, this)">CN VIII</button>
+        <button class="cn-btn" onclick="testCN(9, this)">CN IX</button>
+        <button class="cn-btn" onclick="testCN(10, this)">CN X</button>
+        <button class="cn-btn" onclick="testCN(11, this)">CN XI</button>
+        <button class="cn-btn" onclick="testCN(12, this)">CN XII</button>
+    </div>
+
+    <div class="legend">
+        <span>✨ Glisten = Sensory</span>
+        <span>〰️ Jiggle = Motor</span>
+        <span>✨〰️ Both = Mixed Nerve</span>
+    </div>
+</div>
+
+<script>
+    const data = {
+        1: { emoji: '👃', type: 'glisten', desc: 'Olfactory: Sense of smell.' },
+        2: { emoji: '👓', type: 'glisten', desc: 'Optic: Visual acuity and fields.' },
+        3: { emoji: '👁️', type: 'jiggle', desc: 'Oculomotor: Pupil constriction and lid lift.' },
+        4: { emoji: '↘️', type: 'jiggle', desc: 'Trochlear: Downward and inward eye movement.' },
+        5: { emoji: '👄', type: 'both', desc: 'Trigeminal: Facial sensation and chewing.' },
+        6: { emoji: '↔️', type: 'jiggle', desc: 'Abducens: Lateral (outward) eye movement.' },
+        7: { emoji: '😊', type: 'both', desc: 'Facial: Expressions and anterior taste.' },
+        8: { emoji: '👂', type: 'glisten', desc: 'Vestibulocochlear: Hearing and balance.' },
+        9: { emoji: '👅', type: 'both', desc: 'Glossopharyngeal: Swallow and posterior taste.' },
+        10: { emoji: '🤢', type: 'both', desc: 'Vagus: Gag reflex and parasympathetic flow.' },
+        11: { emoji: '🤷', type: 'jiggle', desc: 'Accessory: Shoulder shrug and neck turning.' },
+        12: { emoji: '👅', type: 'jiggle', desc: 'Hypoglossal: Tongue movement and strength.' }
+    };
+
+    function resetAll() {
+        const viewer = document.getElementById('emoji-viewer');
+        viewer.innerHTML = '🧠';
+        viewer.className = '';
+        document.getElementById('description').innerHTML = 'Select a nerve to begin.';
+        document.querySelectorAll('.cn-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    function testCN(num, btn) {
+        document.querySelectorAll('.cn-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const viewer = document.getElementById('emoji-viewer');
+        const desc = document.getElementById('description');
+        viewer.className = ''; 
+        void viewer.offsetWidth; 
+        viewer.innerHTML = data[num].emoji;
+        viewer.classList.add(data[num].type);
+        desc.innerHTML = data[num].desc;
+    }
+</script>
+</body>
+</html>
