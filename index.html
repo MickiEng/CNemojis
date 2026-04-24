@@ -8,66 +8,71 @@
     <style>
         :root {
             --bg-color: #ffffff;
-            --line-color: #4A90E2; /* Friendlier blue */
+            --line-color: #4A90E2; 
             --btn-hover: #f0f7ff;
             --btn-active: #e1efff;
-            /* Bubbly Gradient for the title */
             --title-gradient: linear-gradient(45deg, #ff6b6b, #48dbfb, #feca57);
         }
 
         body {
-            font-family: 'Fredoka', sans-serif; /* Applied Fredoka globally */
+            font-family: 'Fredoka', sans-serif;
             background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Changed from height to min-height for scrolling on small phones */
             margin: 0;
+            padding: 10px; /* Buffer for mobile edges */
+            box-sizing: border-box;
         }
 
         .lms-widget {
             background: var(--bg-color);
-            padding: 30px;
+            padding: 20px;
             border: 1px solid #ddd;
-            display: grid;
-            grid-template-columns: 1fr 400px 1fr;
-            grid-template-rows: auto 1fr auto;
-            gap: 20px;
+            display: flex; /* Switched to flex for better vertical stacking on mobile */
+            flex-direction: column;
+            gap: 15px;
             align-items: center;
-            width: 750px;
+            width: 100%;
+            max-width: 750px; /* Keeps your original desktop size */
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border-radius: 20px; /* Rounded widget corners */
+            border-radius: 20px;
+position: relative;
         }
 
         .instruction {
-            grid-column: 1 / -1;
             text-align: center;
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             letter-spacing: 0.5px;
-            /* Gradient text effect */
             background: var(--title-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.05));
         }
 
-        .btn-column {
-            display: flex;
-            flex-direction: column;
+        /* --- THE NEW BUTTON GRID --- */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 buttons across on mobile */
             gap: 10px;
             width: 100%;
         }
 
-        .left-side { align-items: flex-start; }
-        .right-side { align-items: flex-end; }
+        /* Desktop Adjustment: Back to a more spread out look on wider screens */
+        @media (min-width: 600px) {
+            .btn-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
 
         .cn-btn {
-            width: 110px;
+            width: 100%; /* Now fluid within the grid */
             background: white;
             border: 2px solid var(--line-color);
-            border-radius: 25px; /* Fully rounded "bubbly" buttons */
+            border-radius: 25px;
             padding: 12px 0;
             cursor: pointer;
             font-weight: 600;
@@ -90,8 +95,8 @@
         }
 
         .display-area {
-            grid-column: 2;
-            height: 350px;
+            width: 100%;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -99,22 +104,24 @@
             text-align: center;
             background: #fafafa;
             border-radius: 15px;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         #emoji-viewer {
-            font-size: 100px;
-            margin-bottom: 20px;
+            font-size: 80px; /* Slightly reduced for mobile height */
+            margin-bottom: 15px;
             display: inline-block;
         }
 
         #description {
             font-size: 16px;
             color: #222;
-            padding: 0 20px;
+            padding: 0 10px;
             line-height: 1.4;
         }
 
-        /* --- GLISTEN (SENSORY) --- */
+        /* --- ANIMATIONS (UNCHANGED) --- */
         @keyframes glisten {
             0% { filter: drop-shadow(0 0 0px rgba(255,255,255,0)) brightness(1); }
             50% { filter: drop-shadow(0 0 25px rgba(255, 223, 0, 0.9)) brightness(1.8); }
@@ -122,7 +129,6 @@
         }
         .glisten { animation: glisten 0.9s ease-in-out; }
 
-        /* --- JIGGLE (MOTOR) --- */
         @keyframes jiggle {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-8deg); }
@@ -133,13 +139,13 @@
         .both { animation: glisten 0.9s ease-in-out, jiggle 0.6s ease-in-out; }
 
         .legend {
-            grid-column: 1 / -1;
             display: flex;
+            flex-wrap: wrap; /* Wrap legend items on small screens */
             justify-content: center;
-            gap: 40px;
+            gap: 15px;
             font-size: 13px;
             color: #666;
-            margin-top: 15px;
+            margin-top: 10px;
             font-weight: 400;
         }
         
@@ -152,7 +158,28 @@
             font-size: 11px; 
             margin-top: 5px; 
             font-family: 'Fredoka', sans-serif;
+            align-self: center;
         }
+.widget-logo {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    max-height: 45px;
+    width: auto;
+    z-index: 100;
+}
+@media screen and (max-width: 600px) {
+    .widget-logo {
+        position: static !important;
+        display: block !important;
+        margin: 20px auto 10px auto !important;
+        max-height: 35px !important;
+    }
+.lms-widget {
+        position: relative; /* "Traps" the logo in the top-right on desktop */
+        padding-top: 45px;  /* Space for logo on desktop so it won't hit the title */
+    }
+}
     </style>
 </head>
 <body>
@@ -160,22 +187,18 @@
 <div class="lms-widget">
     <div class="instruction">Cranial Nerve Emoji Functions</div>
 
-    <div class="btn-column left-side">
+    <div class="display-area">
+        <div id="emoji-viewer">🧠</div>
+        <div id="description">Select a nerve to begin.</div>
+    </div>
+
+    <div class="btn-grid">
         <button class="cn-btn" onclick="testCN(1, this)">CN I</button>
         <button class="cn-btn" onclick="testCN(2, this)">CN II</button>
         <button class="cn-btn" onclick="testCN(3, this)">CN III</button>
         <button class="cn-btn" onclick="testCN(4, this)">CN IV</button>
         <button class="cn-btn" onclick="testCN(5, this)">CN V</button>
         <button class="cn-btn" onclick="testCN(6, this)">CN VI</button>
-        <button id="reset-btn" onclick="resetAll()">Reset View</button>
-    </div>
-
-    <div class="display-area">
-        <div id="emoji-viewer">🧠</div>
-        <div id="description">Select a nerve to begin.</div>
-    </div>
-
-    <div class="btn-column right-side">
         <button class="cn-btn" onclick="testCN(7, this)">CN VII</button>
         <button class="cn-btn" onclick="testCN(8, this)">CN VIII</button>
         <button class="cn-btn" onclick="testCN(9, this)">CN IX</button>
@@ -184,14 +207,18 @@
         <button class="cn-btn" onclick="testCN(12, this)">CN XII</button>
     </div>
 
+    <button id="reset-btn" onclick="resetAll()">Reset View</button>
+
     <div class="legend">
         <span>✨ Glisten = Sensory</span>
         <span>〰️ Jiggle = Motor</span>
         <span>✨〰️ Both = Mixed Nerve</span>
     </div>
+<img src="beal_logo_blue_sm.webp" alt="Beal University Logo" class="widget-logo">
 </div>
 
 <script>
+    // DATA AND SCRIPT LEFT EXACTLY THE SAME
     const data = {
         1: { emoji: '👃', type: 'glisten', desc: 'Olfactory: Sense of smell.' },
         2: { emoji: '👓', type: 'glisten', desc: 'Optic: Visual acuity and fields.' },
